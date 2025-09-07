@@ -1,21 +1,29 @@
-import { Router } from "express";
-import * as userController from '../controllers/user.controllers.js';
-import {body} from 'express-validator'
-import * as authMiddleware from '../middleware/auth.middleware.js'
-const router=Router();
+import { Router } from 'express';
+import * as userController from '../controllers/user.controller.js';
+import { body } from 'express-validator';
+import * as authMiddleware from '../middleware/auth.middleware.js';
 
-router.post('/register', 
-    body('email').isEmail().withMessage('Email must be a valid Email'),
-    body('password').isLength({ min: 5 }).withMessage('Password must be at least 5 characters long'),
-    userController.createUserController
-);
+const router = Router();
+
+
+
+router.post('/register',
+    body('email').isEmail().withMessage('Email must be a valid email address'),
+    body('password').isLength({ min: 3 }).withMessage('Password must be at least 3 characters long'),
+    userController.createUserController);
+
 router.post('/login',
-    body('email').isEmail().withMessage('Email must be a valid Email'),
-    body('password').exists().withMessage('Password is required'),
-    userController.loginUserController
-);
+    body('email').isEmail().withMessage('Email must be a valid email address'),
+    body('password').isLength({ min: 3 }).withMessage('Password must be at least 3 characters long'),
+    userController.loginController);
+
 router.get('/profile', authMiddleware.authUser, userController.profileController);
+
+
 router.get('/logout', authMiddleware.authUser, userController.logoutController);
 
-router.get('/all', authMiddleware.authUser, userController.getAllUsers);
+
+router.get('/all', authMiddleware.authUser, userController.getAllUsersController);
+
+
 export default router;
